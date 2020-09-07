@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CustomerDAO">
+	
+	<insert id="insertAccount" parameterType="park.spring.web.vo.CustomerVO">
+		INSERT INTO customer(email, password, name, nick_name, gender) values(#{email}, #{password}, #{name}, #{nick_name}, #{gender})
+	</insert>
+	<update id="updateProfileImg" parameterType="park.spring.web.vo.CustomerVO">
+		UPDATE customer SET profile_img = #{profile_img} WHERE email = #{email}
+	</update>
+	<update id="updateProfile" parameterType="park.spring.web.vo.CustomerVO">
+		UPDATE customer SET name = #{name}, nick_name =#{nick_name}, introduce = #{introduce}, gender = #{gender} WHERE email = #{email}
+	</update>
+	<update id="changePassword" parameterType="park.spring.web.vo.CustomerVO">
+		UPDATE customer SET password = #{password} WHERE email = #{email}
+	</update>
+	<update id="changeStatus" parameterType="String">
+		update customer set status = (select decode(status,0,1,0) from customer where email = #{value})
+		where email = #{value}
+	</update>
+	<select id="emailCheck" parameterType="String" resultType="int">
+		SELECT COUNT(email) FROM customer WHERE email = #{value}
+	</select>
+	<select id="loginCheck" parameterType="String" resultType="park.spring.web.vo.CustomerVO">
+		SELECT password,status FROM customer WHERE email = #{value}
+	</select>
+	<select id="getPassword" parameterType="String" resultType="String">
+		SELECT password FROM customer WHERE email = #{value}
+	</select>
+	<select id="getCustomer" parameterType="String" resultType="park.spring.web.vo.CustomerVO">
+		SELECT email,password,name,nick_name,introduce,gender,status,profile_img,to_char(regdate,'yyyy/MM/dd') as regdate FROM customer WHERE email = #{value}
+	</select>
+</mapper>

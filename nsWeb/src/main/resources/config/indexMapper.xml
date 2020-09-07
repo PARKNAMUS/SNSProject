@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="indexDAO">
+
+	<select id="getSearchUser" parameterType="String" resultType="park.spring.web.vo.CustomerVO">
+		SELECT email,name,nick_name,profile_img FROM customer WHERE name like '%' || #{value} || '%' or nick_name like '%' || #{value} || '%'
+	</select>
+
+</mapper>
