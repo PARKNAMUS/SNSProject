@@ -11,9 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import park.spring.common.TempKey;
 import park.spring.web.service.customer.CustomerServiceImpl;
+import park.spring.web.service.index.IndexServiceImpl;
 import park.spring.web.service.mail.MailService;
 import park.spring.web.service.mail.MailServiceImpl;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.FollowVO;
 
 @Controller
 public class UserController {
@@ -21,6 +23,8 @@ public class UserController {
 	private MailServiceImpl mailServiceImpl;
 	@Autowired
 	private CustomerServiceImpl customerServiceImpl;
+	@Autowired
+	private IndexServiceImpl indexServiceImpl;
 	
 	@RequestMapping(value = "/signupProcess.do",produces = "application/text; charset=utf8")
 	@ResponseBody
@@ -53,9 +57,11 @@ public class UserController {
 		if(session.getAttribute("login_id") == null) {
 			session.setAttribute("login_id", vo.getEmail());
 		}
-		
 		CustomerVO myvo = customerServiceImpl.getCustomer((String)session.getAttribute("login_id"));
-		session.setAttribute("myimg", myvo.getProfile_img());
+		if(session.getAttribute("myimg") == null) {
+			session.setAttribute("myimg", myvo.getProfile_img());
+		}
+		mav.addObject("post",indexServiceImpl.getPost((String)session.getAttribute("login_id")));
 		mav.addObject("customer",myvo);
 		mav.setViewName("index");
 		return mav;
@@ -63,12 +69,18 @@ public class UserController {
 	@RequestMapping("/profile.do")
 	public ModelAndView profilePageController(ModelAndView mav,HttpSession session) {
 		mav.addObject("customer",customerServiceImpl.getCustomer((String)session.getAttribute("login_id")));
+		
 		mav.setViewName("profile");
 		return mav;
 	}
 	@RequestMapping("/userProfile.do")
-	public ModelAndView userProfileController(@RequestParam("email") String email,ModelAndView mav ) {
-		mav.addObject("customer",customerServiceImpl.getCustomer(email));
+	public ModelAndView userProfileController(@RequestParam("email") String email,HttpSession session,ModelAndView mav ) {
+		CustomerVO vo = customerServiceImpl.getCustomer(email);
+		FollowVO fvo = new FollowVO();
+		fvo.setFollowing(vo.getEmail());
+		fvo.setFollower((String)session.getAttribute("login_id"));
+		vo.setFollowStatus(customerServiceImpl.checkFollow(fvo));
+		mav.addObject("customer",vo);
 		mav.setViewName("profile");
 		return mav;
 	}
@@ -148,5 +160,22 @@ public class UserController {
 		}
 
 	}
-	
+	@RequestMapping("uploadPage.do")
+	public String uploadPageController() {
+		return "postupload";
+	}
+	@RequestMapping(value = "follow.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String followController(FollowVO vo,HttpSession session) {
+		vo.setFollower((String)session.getAttribute("login_id"));
+		customerServiceImpl.follow(vo);
+		return "";
+	}
+	@RequestMapping(value = "unfollow.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String unfollowController(FollowVO vo,HttpSession session) {
+		vo.setFollower((String)session.getAttribute("login_id"));
+		customerServiceImpl.unfollow(vo);
+		return "";
+	}
 }

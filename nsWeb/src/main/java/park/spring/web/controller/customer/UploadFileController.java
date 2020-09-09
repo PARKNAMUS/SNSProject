@@ -2,6 +2,7 @@ package park.spring.web.controller.customer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import park.spring.web.service.customer.CustomerServiceImpl;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.PostVO;
 
 @Controller
 public class UploadFileController {
@@ -60,5 +63,25 @@ public class UploadFileController {
 			file.delete();
 		}
 		return "delete";
+	}
+	@RequestMapping("postUpload.do")
+	public String uploadPostController(PostVO vo,HttpSession session, MultipartHttpServletRequest mtfRequest) throws IllegalStateException, IOException{
+		List<MultipartFile> fileList = mtfRequest.getFiles("postimg");
+		StringBuffer sb = new StringBuffer();
+		for(int i=0;i<fileList.size();i++) {
+			String ofn = fileList.get(i).getOriginalFilename();
+			UUID uuid = UUID.randomUUID();
+			ofn = uuid+ofn;
+			fileList.get(i).transferTo(new File(pathName+ofn));
+			if(i != 0) {
+				sb.append(","+ofn);
+			}else {
+				sb.append(ofn);
+			}
+		}
+		vo.setPost_uploader((String)session.getAttribute("login_id"));
+		vo.setPost_image(sb.toString());
+		customerServiceImpl.uploadPost(vo);
+		return "redirect:loginSuccess.do";
 	}
 }

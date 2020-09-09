@@ -63,6 +63,7 @@
 						 },
 						 success:function(data){
 							 alert("프로필 이미지가 변경되었습니다.")
+							 opener.location.reload(true);
 							 self.close();
 						 },
 						 error:function(){

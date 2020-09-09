@@ -7,6 +7,21 @@
 	<insert id="insertAccount" parameterType="park.spring.web.vo.CustomerVO">
 		INSERT INTO customer(email, password, name, nick_name, gender) values(#{email}, #{password}, #{name}, #{nick_name}, #{gender})
 	</insert>
+	<insert id="uploadPost" parameterType="park.spring.web.vo.PostVO">
+		<selectKey keyProperty="post_seq" resultType="int" order="BEFORE">
+		SELECT post_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO post(post_seq,post_content,post_image,post_uploader) VALUES(#{post_seq},#{post_content},#{post_image},#{post_uploader}) 
+	</insert>
+	<insert id="follow" parameterType="park.spring.web.vo.FollowVO">
+		<selectKey keyProperty="follow_seq" resultType="int" order="BEFORE">
+		SELECT follow_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO follow(follow_seq, follower, following) VALUES(#{follow_seq}, #{follower}, #{following})
+	</insert>
+	<delete id="unfollow" parameterType="park.spring.web.vo.FollowVO">
+		DELETE follow WHERE follower = #{follower} and following = #{following}
+	</delete>
 	<update id="updateProfileImg" parameterType="park.spring.web.vo.CustomerVO">
 		UPDATE customer SET profile_img = #{profile_img} WHERE email = #{email}
 	</update>
@@ -31,5 +46,8 @@
 	</select>
 	<select id="getCustomer" parameterType="String" resultType="park.spring.web.vo.CustomerVO">
 		SELECT email,password,name,nick_name,introduce,gender,status,profile_img,to_char(regdate,'yyyy/MM/dd') as regdate FROM customer WHERE email = #{value}
+	</select>
+	<select id="checkFollow" parameterType="park.spring.web.vo.FollowVO" resultType="int">
+		SELECT COUNT(following) FROM follow WHERE follower = #{follower} and following = #{following} 
 	</select>
 </mapper>

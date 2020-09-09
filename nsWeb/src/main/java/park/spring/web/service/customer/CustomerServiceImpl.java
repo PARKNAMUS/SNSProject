@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import park.spring.web.dao.customer.CustomerDAOImpl;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.FollowVO;
+import park.spring.web.vo.PostVO;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -88,6 +90,23 @@ public class CustomerServiceImpl implements CustomerService {
 		}else {
 			return "fail";
 		}	
+	}
+	@Override
+	public void uploadPost(PostVO vo) {
+		customerDAOImpl.uploadPost(vo);
+	}
+	@Override
+	public void follow(FollowVO vo) {
+		customerDAOImpl.follow(vo);
+		
+	}
+	@Override
+	public int checkFollow(FollowVO vo) {
+		return customerDAOImpl.checkFollow(vo);
+	}
+	@Override
+	public void unfollow(FollowVO vo) {
+		customerDAOImpl.unfollow(vo);
 	}
 
 }

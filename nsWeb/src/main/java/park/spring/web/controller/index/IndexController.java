@@ -28,4 +28,10 @@ public class IndexController {
 		String jsonStr = mapper.writeValueAsString(list);
 		return jsonStr;
 	}
+	@RequestMapping(value = "getImage.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String getImageController(@RequestParam("post_seq") String post_seq) {
+		
+		return indexServiceImpl.getImage(Integer.parseInt(post_seq));
+	}
 }	

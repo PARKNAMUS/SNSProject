@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.FollowVO;
+import park.spring.web.vo.PostVO;
 
 @Repository
 public class CustomerDAOImpl implements CustomerDAO {
@@ -59,6 +61,27 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@Override
 	public String getPassword(String email) {
 		return sqlSessionTemplate.selectOne(mbId+"getPassword",email);
+	}
+
+	@Override
+	public void uploadPost(PostVO vo) {
+		sqlSessionTemplate.insert(mbId+"uploadPost",vo);
+	}
+
+	@Override
+	public void follow(FollowVO vo) {
+		sqlSessionTemplate.insert(mbId+"follow",vo);
+	}
+
+	@Override
+	public int checkFollow(FollowVO vo) {
+		return sqlSessionTemplate.selectOne(mbId+"checkFollow",vo);
+	}
+
+	@Override
+	public void unfollow(FollowVO vo) {
+		sqlSessionTemplate.delete(mbId+"unfollow",vo);
+		
 	}
 
 }

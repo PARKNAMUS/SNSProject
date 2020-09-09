@@ -7,5 +7,12 @@
 	<select id="getSearchUser" parameterType="String" resultType="park.spring.web.vo.CustomerVO">
 		SELECT email,name,nick_name,profile_img FROM customer WHERE name like '%' || #{value} || '%' or nick_name like '%' || #{value} || '%'
 	</select>
-
+	<select id="getPost" parameterType="String" resultType="park.spring.web.vo.PostVO">
+		<![CDATA[select p.post_seq,p.post_content,p.post_image,p.post_uploader,to_char(p.post_regdate,'yyyy/MM/dd') as post_regdate,c.profile_img,c.nick_name 
+		from post p join customer c on p.post_uploader = c.email
+		where p.post_uploader = #{value} or p.post_uploader in (select following from follow where follower = #{value}) order by post_regdate desc]]>
+	</select>
+	<select id="getImage" parameterType="int" resultType="String">
+		SELECT post_image FROM post WHERE post_seq = #{post_seq}
+	</select>
 </mapper>

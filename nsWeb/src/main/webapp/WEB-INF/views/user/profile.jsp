@@ -48,10 +48,15 @@
 				</div><br><br>
 				<div>
 					<c:if test="${login_id == customer.email }">
-						<button style="font-size:20px;color:black;" class="btn btn-outline-secondary" onclick="location.href='profileset.do'">프로필 편집</button>&nbsp;&nbsp;<button style="font-size:20px;color:black;" class="btn btn-outline-secondary">게시물 업로드</button>
+						<button style="font-size:20px;color:black;" class="btn btn-outline-secondary" onclick="location.href='profileset.do'">프로필 편집</button>&nbsp;&nbsp;<button style="font-size:20px;color:black;" class="btn btn-outline-secondary" onclick="location.href='uploadPage.do'">게시물 업로드</button>
 					</c:if>
 					<c:if test="${login_id != customer.email }">
-						<button style="font-size:20px;color:black;" class="btn btn-outline-secondary" onclick="">팔로우</button>
+						<c:if test="${customer.followStatus == 0 }">
+							<button style="font-size:20px;color:black;" class="btn btn-outline-secondary" onclick="follow('${customer.email}')" id="fbtn">팔로우</button>
+						</c:if>
+						<c:if test="${customer.followStatus == 1 }">
+							<button style="font-size:20px;color:black;" class="btn btn-secondary" onclick="unfollow('${customer.email}')" id="fbtn">팔로잉</button>
+						</c:if>
 					</c:if>
 				</div>
 			</div>
@@ -102,5 +107,38 @@
 			$("#board").css("border-top","none");			
 		})
 	})
+	
+	var follow = function(email){
+		$.ajax({
+			 type:"POST",
+			 url:"follow.do",
+			 dataType:"text",
+			 data:{
+				 following:email
+			 },
+			 success:function(data){
+				 location.reload(true);
+			 },
+			 error:function(error){
+				 
+			 }
+		})
+	}
+	var unfollow = function(email){
+		$.ajax({
+			 type:"POST",
+			 url:"unfollow.do",
+			 dataType:"text",
+			 data:{
+				 following:email
+			 },
+			 success:function(data){
+				 location.reload(true);
+			 },
+			 error:function(error){
+				 
+			 }
+		})
+	}
 </script>
 </html>

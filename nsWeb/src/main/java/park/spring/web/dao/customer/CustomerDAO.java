@@ -1,6 +1,8 @@
 package park.spring.web.dao.customer;
 
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.FollowVO;
+import park.spring.web.vo.PostVO;
 
 public interface CustomerDAO {
 	
@@ -13,4 +15,8 @@ public interface CustomerDAO {
 	public void changePassword(CustomerVO vo);
 	public void changeStatus(String email);
 	public String getPassword(String email);
+	public void uploadPost(PostVO vo);
+	public void follow(FollowVO vo);
+	public int checkFollow(FollowVO vo);
+	public void unfollow(FollowVO vo);
 }

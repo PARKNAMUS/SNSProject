@@ -11,10 +11,17 @@ public class CustomerVO {
 	private String gender;
 	private String phone;
 	private int status;
+	private int followStatus;
 	private String profile_img;
 	private MultipartFile uploadProfile;
 	private String regdate;
 	
+	public int getFollowStatus() {
+		return followStatus;
+	}
+	public void setFollowStatus(int followStatus) {
+		this.followStatus = followStatus;
+	}
 	public MultipartFile getUploadProfile() {
 		return uploadProfile;
 	}
