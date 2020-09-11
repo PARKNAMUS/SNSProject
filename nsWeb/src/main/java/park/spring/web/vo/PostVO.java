@@ -11,7 +11,15 @@ public class PostVO {
 	private String post_regdate;
 	private String profile_img;
 	private String nick_name;
+	private int comments_num;
 	
+	
+	public int getComments_num() {
+		return comments_num;
+	}
+	public void setComments_num(int comments_num) {
+		this.comments_num = comments_num;
+	}
 	public String getProfile_img() {
 		return profile_img;
 	}

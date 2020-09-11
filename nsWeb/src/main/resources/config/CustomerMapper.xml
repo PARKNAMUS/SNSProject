@@ -22,6 +22,7 @@
 	<delete id="unfollow" parameterType="park.spring.web.vo.FollowVO">
 		DELETE follow WHERE follower = #{follower} and following = #{following}
 	</delete>
+	
 	<update id="updateProfileImg" parameterType="park.spring.web.vo.CustomerVO">
 		UPDATE customer SET profile_img = #{profile_img} WHERE email = #{email}
 	</update>
@@ -49,5 +50,10 @@
 	</select>
 	<select id="checkFollow" parameterType="park.spring.web.vo.FollowVO" resultType="int">
 		SELECT COUNT(following) FROM follow WHERE follower = #{follower} and following = #{following} 
+	</select>
+	<select id="getMyPost" parameterType="String" resultType="park.spring.web.vo.PostVO">
+		<![CDATA[select p.post_seq,p.post_content,p.post_image,p.post_uploader,to_char(p.post_regdate,'yyyy/MM/dd') as post_regdate,c.profile_img,c.nick_name
+		from post p join customer c on p.post_uploader = c.email
+		where p.post_uploader = #{value} order by post_regdate desc]]>
 	</select>
 </mapper>

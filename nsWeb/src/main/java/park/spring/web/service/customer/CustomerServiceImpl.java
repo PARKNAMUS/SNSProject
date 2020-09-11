@@ -1,5 +1,7 @@
 package park.spring.web.service.customer;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,5 +110,12 @@ public class CustomerServiceImpl implements CustomerService {
 	public void unfollow(FollowVO vo) {
 		customerDAOImpl.unfollow(vo);
 	}
-
+	@Override
+	public List<PostVO> getMyPost(String email) {
+		List<PostVO> list = customerDAOImpl.getMyPost(email);
+		for(int i=0;i<list.size();i++) {
+			list.get(i).setImageList(list.get(i).getPost_image().split(","));
+		}
+		return list;
+	}
 }

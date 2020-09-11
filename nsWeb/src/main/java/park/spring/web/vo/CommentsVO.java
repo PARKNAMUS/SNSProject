@@ -4,8 +4,30 @@ public class CommentsVO {
 	private int comments_seq;
 	private String comments_email;
 	private String comments_nick_name;
+	private String comment_content;
 	private int commnets_post_seq;
+	private String comments_profile;
 	private String comments_regdate;
+	private String post_seq_str;
+	
+	public String getComments_profile() {
+		return comments_profile;
+	}
+	public void setComments_profile(String comments_profile) {
+		this.comments_profile = comments_profile;
+	}
+	public String getPost_seq_str() {
+		return post_seq_str;
+	}
+	public void setPost_seq_str(String post_seq_str) {
+		this.post_seq_str = post_seq_str;
+	}
+	public String getComment_content() {
+		return comment_content;
+	}
+	public void setComment_content(String comment_content) {
+		this.comment_content = comment_content;
+	}
 	public int getComments_seq() {
 		return comments_seq;
 	}

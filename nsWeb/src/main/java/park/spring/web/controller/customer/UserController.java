@@ -69,7 +69,7 @@ public class UserController {
 	@RequestMapping("/profile.do")
 	public ModelAndView profilePageController(ModelAndView mav,HttpSession session) {
 		mav.addObject("customer",customerServiceImpl.getCustomer((String)session.getAttribute("login_id")));
-		
+		mav.addObject("post",customerServiceImpl.getMyPost((String)session.getAttribute("login_id")));
 		mav.setViewName("profile");
 		return mav;
 	}
@@ -81,6 +81,7 @@ public class UserController {
 		fvo.setFollower((String)session.getAttribute("login_id"));
 		vo.setFollowStatus(customerServiceImpl.checkFollow(fvo));
 		mav.addObject("customer",vo);
+		mav.addObject("post",customerServiceImpl.getMyPost(email));
 		mav.setViewName("profile");
 		return mav;
 	}

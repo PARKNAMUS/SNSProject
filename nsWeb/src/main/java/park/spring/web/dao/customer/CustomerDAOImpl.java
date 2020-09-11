@@ -1,5 +1,7 @@
 package park.spring.web.dao.customer;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -83,5 +85,12 @@ public class CustomerDAOImpl implements CustomerDAO {
 		sqlSessionTemplate.delete(mbId+"unfollow",vo);
 		
 	}
+
+	@Override
+	public List<PostVO> getMyPost(String email) {
+		return sqlSessionTemplate.selectList(mbId+"getMyPost",email);
+	}
+
+	
 
 }

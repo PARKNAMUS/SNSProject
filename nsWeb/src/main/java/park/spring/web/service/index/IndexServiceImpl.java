@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import park.spring.web.dao.index.IndexDaoImpl;
+import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.PostVO;
 
@@ -29,6 +30,19 @@ public class IndexServiceImpl implements IndexService {
 	@Override
 	public String getImage(int post_seq) {
 		return indexDaoImpl.getImage(post_seq);
+	}
+	@Override
+	public void insertComment(CommentsVO vo) {
+		indexDaoImpl.insertComment(vo);
+		
+	}
+	@Override
+	public void deletePost(int post_seq) {
+		indexDaoImpl.deletePost(post_seq);
+	}
+	@Override
+	public List<CommentsVO> getComments(int post_seq) {
+		return indexDaoImpl.getComments(post_seq);
 	}
 
 }

@@ -22,6 +22,15 @@
 	margin-left: 28%;
 
 }
+@media ( max-width : 1500px){
+	#imgdiv{
+		display:none;
+	}
+	#maindiv{
+		margin-left:0%;
+		margin-top: 0%;
+	}
+}
 </style>
 </head>
 <body style="background-color:#FAFAFA;">
@@ -85,7 +94,7 @@
 			 document.getElementById("email").focus();
 			 return false;
 		 }
-		 if(!passwordRegExp.test(password)){
+		 if(password.length <8 || password.length>16){
 			 alert("비밀번호는 영문 대소문자와 숫자로 8~16자리여야 합니다.")
 			 document.getElementById("password").value="";
 			 document.getElementById("password").focus();

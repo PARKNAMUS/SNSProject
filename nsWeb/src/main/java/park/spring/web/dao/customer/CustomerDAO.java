@@ -1,5 +1,7 @@
 package park.spring.web.dao.customer;
 
+import java.util.List;
+
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.FollowVO;
 import park.spring.web.vo.PostVO;
@@ -19,4 +21,6 @@ public interface CustomerDAO {
 	public void follow(FollowVO vo);
 	public int checkFollow(FollowVO vo);
 	public void unfollow(FollowVO vo);
+	public List<PostVO> getMyPost(String email);
+
 }

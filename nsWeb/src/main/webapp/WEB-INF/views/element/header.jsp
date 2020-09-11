@@ -72,32 +72,32 @@
 			</div>
 		</div>
 		<div style="float:left;width:20%;height:60%;margin-left:10%;margin-top:0.7%;">
-			<div style="float:left;width:11%;height:100%;" onclick="location.href='loginSuccess.do'">
+			<div style="float:left;width:11%;height:100%;" onclick="location.href='loginSuccess.do'" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
 				<img alt="" src="${pageContext.request.contextPath}/resources/images/home.png" style="width:100%;height:100%;">
 			</div>
-			<div style="float:left;width:11%;height:100%;margin-left:13%">
+			<div style="float:left;width:11%;height:100%;margin-left:13%" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
 				<img alt="" src="${pageContext.request.contextPath}/resources/images/dm.png" style="width:100%;height:100%;">
 			</div>
 			<div style="float:left;width:11%;height:100%;margin-left:13%;border-radius:70%;overflow:hidden;" id="myimg">
-				<img alt="" src="http://localhost:8080/web/images/${myimg}" style="width:100%;height:100%;">
+				<img alt="" src="/web/images/${myimg}" style="width:100%;height:100%;">
 			</div>
 		</div>
 	</div>
 		<div style="clear:both;"></div>
 	<div id="headdiv">
-		<div style="" onclick="location.href='profile.do'">
+		<div style="" onclick="location.href='profile.do'" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)"> 
 			<img alt="" src="${pageContext.request.contextPath}/resources/images/index/user.png" style="width:30px;height:30px;vertical-align:middle;">
 			<b>프로필</b>
 		</div><br>
-		<div style="" onclick="location.href='profileset.do'">
+		<div style="" onclick="location.href='profileset.do'" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
 			<img alt="" src="${pageContext.request.contextPath}/resources/images/index/setting.png" style="width:30px;height:30px;vertical-align:middle;">
 			<b>설정</b>
 		</div><br>
-		<div style="">
+		<div style="" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
 			<img alt="" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:30px;height:30px;vertical-align:middle;">
 			<b>저장됨</b>
 		</div><hr>
-		<div style="" onclick="location.href='logout.do'">
+		<div style="" onclick="location.href='logout.do'" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
 			<b>로그아웃</b>
 		</div>
 	</div>
@@ -124,12 +124,11 @@
 						if(getdata.length >0){
 							for(var i =0; i<getdata.length; i++){
 								$("#searchdiv").append("<div style='width:100%;overflow: auto;' id='sdiv"+i+"' class='sdiv'>"
-								+"<div style='float:left;'><img src='http://localhost:8080/web/images/"+getdata[i].profile_img+"' style='border-radius:70%;vertical-align:middle;width:50px;height:50px;'></div>"
+								+"<div style='float:left;'><img src='/web/images/"+getdata[i].profile_img+"' style='border-radius:70%;vertical-align:middle;width:50px;height:50px;'></div>"
 								+"<div style='float:left;margin-left:10%;'><p style='font-size:20px;'>"+getdata[i].nick_name+"</p><br><p style='font-size:15px;'>"+getdata[i].name+"</p></div>"
 								+"</div><div style='clear:both;'></div><hr>")
 								$("#sdiv"+i).attr("onclick","userProfile('"+getdata[i].email+"')")
 								$("#sdiv"+i).hover("")
-								$("")
 							}
 						}else{
 							$("#searchdiv").append("<h3 style='margin-top:5%;margin-bottom:5%;margin-left:5%;'>검색결과가 없습니다.</h3>")
@@ -146,7 +145,6 @@
 			$("#searchdiv").css("display","none");
 		}
 		var userProfile = function(email){
-			alert(email);
 			location.href='userProfile.do?email='+email;	
 		}
 		function sleep(ms) {

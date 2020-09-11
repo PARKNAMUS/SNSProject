@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.PostVO;
 
@@ -26,5 +27,18 @@ public class IndexDaoImpl implements IndexDao {
 	public String getImage(int post_seq) {
 		return sqlSessionTemplate.selectOne(mbId+"getImage",post_seq);
 	}
+	@Override
+	public void insertComment(CommentsVO vo) {
+		sqlSessionTemplate.insert(mbId+"insertComment",vo);
+	}
+	@Override
+	public void deletePost(int post_seq) {
+		sqlSessionTemplate.delete(mbId+"deletePost",post_seq);
+	}
+	@Override
+	public List<CommentsVO> getComments(int post_seq) {
+		return sqlSessionTemplate.selectList(mbId+"getComments",post_seq);
+	}
+	
 
 }

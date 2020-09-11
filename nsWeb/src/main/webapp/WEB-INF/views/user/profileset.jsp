@@ -53,7 +53,7 @@
 			<div style="float:left;width:450px;margin-left:80px;padding-top:50px;">
 				<div>
 					<p style="font-size:30px;">${customer.nick_name }</p><br>
-					<a style="font-size:20px;color:skyblue;" onclick="openProfileImg()">프로필 이미지 변경</a>
+					<a style="font-size:20px;color:skyblue;" onclick="openProfileImg()" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">프로필 이미지 변경</a>
 				</div><br><br><br>
 				<div style="width:400px;">
 					<form action="updateProfile.do" id="changeForm">

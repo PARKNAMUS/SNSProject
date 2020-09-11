@@ -20,5 +20,5 @@ public interface CustomerService {
 	public void follow(FollowVO vo);
 	public int checkFollow(FollowVO vo);
 	public void unfollow(FollowVO vo);
-	
+	public List<PostVO> getMyPost(String email);
 }
