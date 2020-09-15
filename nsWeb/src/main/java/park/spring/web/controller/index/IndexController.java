@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import park.spring.web.service.index.IndexServiceImpl;
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.PostLikeVO;
+import park.spring.web.vo.PostSaveVO;
 
 @Controller
 public class IndexController {
@@ -54,8 +56,30 @@ public class IndexController {
 		List<CommentsVO> list = indexServiceImpl.getComments(Integer.parseInt(post_seq));
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonStr = mapper.writeValueAsString(list);
-		return jsonStr;
-
-		
+		return jsonStr;		
+	}
+	@RequestMapping(value = "belike.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String beLikeController(PostLikeVO vo) {
+		indexServiceImpl.beLike(vo);
+		return"";
+	}
+	@RequestMapping(value = "unlike.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String unLikeController(PostLikeVO vo) {
+		indexServiceImpl.unLike(vo);
+		return"";
+	}
+	@RequestMapping(value = "save.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String saveController(PostSaveVO vo) {
+		indexServiceImpl.save(vo);
+		return "";
+	}
+	@RequestMapping(value = "unsave.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String unsaveController(PostSaveVO vo) {
+		indexServiceImpl.unsave(vo);
+		return "";
 	}
 }	

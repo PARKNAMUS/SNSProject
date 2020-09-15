@@ -18,7 +18,7 @@
 <body>
 	<div>
 	<form action="" method="post" id="profileForm" enctype="multipart/form-data">
-		<input type="file" name="uploadProfile" id="file" class="btn btn-secondary" />
+		<input type="file" name="uploadProfile" id="file" class="btn btn-secondary" accept=".gif, .jpg, .png" />
 		<input type="button" value="제출" id="btn" class="btn btn-secondary" />
 		<input type="button" value="취소" class="btn btn-secondary" id="cancel">
 	</form><br><br>
@@ -32,6 +32,7 @@
 	$(function(){
 		$("#file").change(function(){
 			var prodata = new FormData($('#profileForm')[0]);
+			alert(prodata)
 			$.ajax({
 				 type:"POST",
 				 enctype: 'multipart/form-data',

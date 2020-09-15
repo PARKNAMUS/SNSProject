@@ -2,8 +2,8 @@ package park.spring.web.vo;
 
 public class FollowVO {
 	private int follow_seq;
-	private String follower;
-	private String following;
+	private String follower;//ÆÈ·Î¿ìÇÏ´Â »ç¶÷
+	private String following;//ÆÈ·ÎÀ×µÇ´Â »ç¶÷
 	private String follow_regdate;
 	public int getFollow_seq() {
 		return follow_seq;

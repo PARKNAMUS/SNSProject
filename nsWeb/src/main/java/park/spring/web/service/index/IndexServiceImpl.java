@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import park.spring.web.dao.index.IndexDaoImpl;
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.PostLikeVO;
+import park.spring.web.vo.PostSaveVO;
 import park.spring.web.vo.PostVO;
 
 @Service
@@ -43,6 +45,26 @@ public class IndexServiceImpl implements IndexService {
 	@Override
 	public List<CommentsVO> getComments(int post_seq) {
 		return indexDaoImpl.getComments(post_seq);
+	}
+	@Override
+	public void beLike(PostLikeVO vo) {
+		indexDaoImpl.beLike(vo);
+	}
+	@Override
+	public void unLike(PostLikeVO vo) {
+		indexDaoImpl.unLike(vo);
+	}
+	@Override
+	public void save(PostSaveVO vo) {
+		indexDaoImpl.save(vo);
+	}
+	@Override
+	public void unsave(PostSaveVO vo) {
+		indexDaoImpl.unsave(vo);
+	}
+	@Override
+	public List<CustomerVO> recommend(String email) {
+		return indexDaoImpl.recommend(email);
 	}
 
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MessageDAO">
+	
+	<select id="getMessageRoom" parameterType="String" resultType="park.spring.web.vo.MessageRoomVO">
+		SELECT room_seq, DECODE(room_user1,#{value},room_user2,room_user1) as room_user,
+		(SELECT nick_name FROM customer WHERE email = DECODE(room_user1,#{value},room_user2,room_user1)) as user_nick_name, 
+        (SELECT profile_img FROM customer WHERE email = DECODE(room_user1,#{value},room_user2,room_user1)) as user_img,    
+        (SELECT message_content FROM (select rownum,message_content,message_room_seq from message order by message_regdate desc) WHERE message_room_seq = room_seq and rownum = 1) as message,
+		to_char(room_sysdate,'yyyy/MM/dd') as room_sysdate FROM message_room  WHERE room_user1 = #{value} or room_user2 = #{value}
+	</select>
+	<select id="getRoomCheck" parameterType="park.spring.web.vo.MessageRoomVO" resultType="int">
+		SELECT COUNT(*) FROM message_room WHERE (room_user1 = #{room_user} and room_user2 =#{room_user2}) or (room_user2 = #{room_user} and room_user1 =#{room_user2})
+	</select>
+	<select id="getRoomNum" parameterType="hashmap" resultType="int">
+		SELECT room_seq FROM message_room WHERE (room_user1 = #{room_user} and room_user2 =#{room_user2}) or (room_user2 = #{room_user} and room_user1 =#{room_user2})
+	</select>
+	<select id="getMessage" parameterType="int" resultType="park.spring.web.vo.MessageVO">
+		SELECT message_seq, senduser, getuser,message_content, to_char(message_regdate,'yyyy/MM/dd') as message_regdate, message_room_seq, to_char(message_regdate,'hh24:mi') as message_time FROM 
+		message WHERE message_room_seq = #{room_seq} ORDER BY message_regdate ASC
+	</select>
+	<select id="getMessageForEmail" parameterType="park.spring.web.vo.MessageRoomVO" resultType="park.spring.web.vo.MessageVO">
+		SELECT message_seq, senduser, getuser, message_content, to_char(message_regdate,'yyyy/MM/dd') as message_regdate FROM 
+		message WHERE message_room_seq = (SELECT room_seq FROM message_room WHERE (room_user1 = #{room_user} and room_user2 =#{room_user2}) or (room_user2 = #{room_user} and room_user1 =#{room_user2})) ORDER BY message_regdate ASC
+	</select>
+	<insert id="insertMessage" parameterType="park.spring.web.vo.MessageVO" >
+		<selectKey keyProperty="message_seq" resultType="int" order="BEFORE">
+		SELECT message_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO message(message_seq, senduser, getuser, message_content,message_room_seq) VALUES(#{message_seq}, #{senduser}, #{getuser}, #{message_content},#{message_room_seq})
+	</insert>
+	<insert id="insertMessageRoom" parameterType="park.spring.web.vo.MessageRoomVO">
+		<selectKey keyProperty="room_seq" resultType="int" order="BEFORE">
+		SELECT room_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO message_room(room_seq, room_user1, room_user2) values(#{room_seq},#{room_user},#{room_user2})
+	</insert>
+</mapper>

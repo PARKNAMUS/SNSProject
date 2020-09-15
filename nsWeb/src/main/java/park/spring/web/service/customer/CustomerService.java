@@ -21,4 +21,8 @@ public interface CustomerService {
 	public int checkFollow(FollowVO vo);
 	public void unfollow(FollowVO vo);
 	public List<PostVO> getMyPost(String email);
+	public List<PostVO> getMySavePost(String email);
+	public List<CustomerVO> getFollower(String email);
+	public List<CustomerVO> getFollowing(String email);
+	
 }

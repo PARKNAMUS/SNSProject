@@ -43,7 +43,14 @@
 		</div>
 		<div style="float:left;width:700px;height:900px;border:solid gray 1px;">
 			<div style="float:left;width:160px;text-align:right;font-size:25px;padding-top:50px;font-weight: bold;">
-				<div><img id="profileimg" alt="" src="http://localhost:8080/web/images/${customer.profile_img}" style="width:64px;height:64px;border-radius:70%;"></div>
+				<c:choose>
+					<c:when test="${customer.profile_img == null || customer.profile_img == ''}">
+						<div><img id="profileimg" alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:64px;height:64px;border-radius:70%;"></div>
+					</c:when>
+					<c:otherwise>
+					<div><img id="profileimg" alt="" src="/web/images/${customer.profile_img }" style="width:64px;height:64px;border-radius:70%;"></div>				
+					</c:otherwise>
+				</c:choose>			
 				<br><br>
 				<div style="margin-bottom:50px;"><b>이름</b></div>
 				<div style="margin-bottom:50px;"><b>사용자 이름</b></div>
@@ -60,10 +67,21 @@
 						<input type="text" class="form-control" style="margin-bottom:41px;" id="name" name="name" value="${customer.name }">
 						<input type="text" class="form-control" style="margin-bottom:41px;" id="nick_name" name="nick_name" value="${customer.nick_name }">
 						<textarea class="form-control" style="margin-bottom:41px;" name="introduce" id="introduce">${customer.introduce }</textarea>	
-						<select class="form-control" style="margin-bottom:41px;" name="gender">
-							<option value="m">남자</option>
-							<option value="f">여자</option>
-						</select>
+						<c:choose>
+							<c:when test="${customer.gender == 'm' }">
+							<select class="form-control" style="margin-bottom:41px;" name="gender">
+								<option value="m">남자</option>
+								<option value="f">여자</option>
+							</select>
+							</c:when>
+							<c:otherwise>
+							<select class="form-control" style="margin-bottom:41px;" name="gender">
+								<option value="m">남자</option>
+								<option value="f" selected="selected">여자</option>
+							</select>
+							</c:otherwise>
+						</c:choose>
+
 						<input type="button" class="btn btn-secondary" value="수정" style="font-size:25px;" onclick="changeProfile()">					
 					</form>
 				</div>

@@ -12,8 +12,35 @@ public class PostVO {
 	private String profile_img;
 	private String nick_name;
 	private int comments_num;
+	private int is_like;
+	private int is_save;
+	private int like_num;
+	private int post_size;
 	
-	
+	public int getPost_size() {
+		return post_size;
+	}
+	public void setPost_size(int post_size) {
+		this.post_size = post_size;
+	}
+	public int getIs_save() {
+		return is_save;
+	}
+	public void setIs_save(int is_save) {
+		this.is_save = is_save;
+	}
+	public int getLike_num() {
+		return like_num;
+	}
+	public void setLike_num(int like_num) {
+		this.like_num = like_num;
+	}
+	public int getIs_like() {
+		return is_like;
+	}
+	public void setIs_like(int is_like) {
+		this.is_like = is_like;
+	}
 	public int getComments_num() {
 		return comments_num;
 	}

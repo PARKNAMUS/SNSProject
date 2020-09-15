@@ -91,6 +91,21 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return sqlSessionTemplate.selectList(mbId+"getMyPost",email);
 	}
 
+	@Override
+	public List<PostVO> getMySavePost(String email) {
+		return sqlSessionTemplate.selectList(mbId+"getMySavePost",email);
+	}
+
+	@Override
+	public List<CustomerVO> getFollower(String email) {
+		return sqlSessionTemplate.selectList(mbId+"getFollower", email);
+	}
+
+	@Override
+	public List<CustomerVO> getFollowing(String email) {
+		return sqlSessionTemplate.selectList(mbId+"getFollowing",email);
+	}
+
 	
 
 }

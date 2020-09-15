@@ -37,7 +37,14 @@
 		</div>
 		<div style="float:left;width:700px;height:900px;border:solid gray 1px;">
 			<div style="float:left;width:160px;text-align:right;font-size:25px;padding-top:50px;font-weight: bold;">
-				<div><img id="profileimg" alt="" src="http://localhost:8080/web/images/${customer.profile_img}" style="width:64px;height:64px;border-radius:70%;"></div>
+				<c:choose>
+					<c:when test="${customer.profile_img == null || customer.profile_img == ''}">
+						<div><img id="profileimg" alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:64px;height:64px;border-radius:70%;"></div>
+					</c:when>
+					<c:otherwise>
+						<div><img id="profileimg" alt="" src="/web/images/${customer.profile_img }" style="width:64px;height:64px;border-radius:70%;"></div>				
+					</c:otherwise>
+				</c:choose>
 				<br><br>
 				<div style="margin-bottom:50px;"><b>이전 비밀번호</b></div>
 				<div style="margin-bottom:50px;"><b>새 비밀번호</b></div>

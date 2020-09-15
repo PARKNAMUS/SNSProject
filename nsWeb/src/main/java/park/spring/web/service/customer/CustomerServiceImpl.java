@@ -118,4 +118,21 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return list;
 	}
+	@Override
+	public List<PostVO> getMySavePost(String email) {
+		List<PostVO> list = customerDAOImpl.getMySavePost(email);
+		for(int i=0;i<list.size();i++) {
+			list.get(i).setImageList(list.get(i).getPost_image().split(","));
+		}
+		return list;
+	}
+	@Override
+	public List<CustomerVO> getFollower(String email) {
+		return customerDAOImpl.getFollower(email);
+	}
+	@Override
+	public List<CustomerVO> getFollowing(String email) {
+		// TODO Auto-generated method stub
+		return customerDAOImpl.getFollowing(email);
+	}
 }

@@ -1,5 +1,7 @@
 package park.spring.web.controller.customer;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import park.spring.common.TempKey;
 import park.spring.web.service.customer.CustomerServiceImpl;
 import park.spring.web.service.index.IndexServiceImpl;
@@ -16,6 +21,7 @@ import park.spring.web.service.mail.MailService;
 import park.spring.web.service.mail.MailServiceImpl;
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.FollowVO;
+import park.spring.web.vo.PostVO;
 
 @Controller
 public class UserController {
@@ -54,12 +60,22 @@ public class UserController {
 	}
 	@RequestMapping("/loginSuccess.do")
 	public ModelAndView loginController(CustomerVO vo,ModelAndView mav,HttpSession session) {
+
 		if(session.getAttribute("login_id") == null) {
-			session.setAttribute("login_id", vo.getEmail());
+			if(vo.getEmail() == null) {
+				mav.setViewName("login");
+				return mav;
+			}else {
+				session.setAttribute("login_id", vo.getEmail());
+			}
 		}
 		CustomerVO myvo = customerServiceImpl.getCustomer((String)session.getAttribute("login_id"));
 		if(session.getAttribute("myimg") == null) {
 			session.setAttribute("myimg", myvo.getProfile_img());
+		}
+		List<CustomerVO> rlist = indexServiceImpl.recommend((String)session.getAttribute("login_id"));
+		if(rlist.size()>0) {
+			mav.addObject("recommend",rlist);
 		}
 		mav.addObject("post",indexServiceImpl.getPost((String)session.getAttribute("login_id")));
 		mav.addObject("customer",myvo);
@@ -67,21 +83,34 @@ public class UserController {
 		return mav;
 	}
 	@RequestMapping("/profile.do")
-	public ModelAndView profilePageController(ModelAndView mav,HttpSession session) {
+	public ModelAndView profilePageController(ModelAndView mav,HttpSession session,@RequestParam("type") String type) {
+		if(type.equals("my")) {
+			mav.addObject("post",customerServiceImpl.getMyPost((String)session.getAttribute("login_id")));
+		}
+		else if(type.equals("save")) {
+			mav.addObject("post",customerServiceImpl.getMySavePost((String)session.getAttribute("login_id")));
+		}
 		mav.addObject("customer",customerServiceImpl.getCustomer((String)session.getAttribute("login_id")));
-		mav.addObject("post",customerServiceImpl.getMyPost((String)session.getAttribute("login_id")));
+		mav.addObject("type",type);
+		mav.addObject("postnum",customerServiceImpl.getMyPost((String)session.getAttribute("login_id")).size());
 		mav.setViewName("profile");
 		return mav;
 	}
 	@RequestMapping("/userProfile.do")
-	public ModelAndView userProfileController(@RequestParam("email") String email,HttpSession session,ModelAndView mav ) {
+	public ModelAndView userProfileController(@RequestParam("email") String email,HttpSession session,@RequestParam("type") String type,ModelAndView mav ) {
 		CustomerVO vo = customerServiceImpl.getCustomer(email);
 		FollowVO fvo = new FollowVO();
 		fvo.setFollowing(vo.getEmail());
 		fvo.setFollower((String)session.getAttribute("login_id"));
 		vo.setFollowStatus(customerServiceImpl.checkFollow(fvo));
 		mav.addObject("customer",vo);
-		mav.addObject("post",customerServiceImpl.getMyPost(email));
+		if(type.equals("my")) {
+			mav.addObject("post",customerServiceImpl.getMyPost(email));
+		}else if(type.equals("save")) {
+			mav.addObject("post",customerServiceImpl.getMySavePost(email));
+		}
+		mav.addObject("postnum",customerServiceImpl.getMyPost(email).size());
+		mav.addObject("type",type);
 		mav.setViewName("profile");
 		return mav;
 	}
@@ -178,5 +207,21 @@ public class UserController {
 		vo.setFollower((String)session.getAttribute("login_id"));
 		customerServiceImpl.unfollow(vo);
 		return "";
+	}
+	@RequestMapping(value = "getfollower.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String getFollowerController(@RequestParam("email") String email) throws JsonProcessingException {
+		List<CustomerVO> list = customerServiceImpl.getFollower(email);
+		ObjectMapper mapper = new ObjectMapper();
+		String str = mapper.writeValueAsString(list);
+		return str;
+	}
+	@RequestMapping(value = "getfollowing.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String getFollowingController(@RequestParam("email") String email) throws JsonProcessingException {
+		List<CustomerVO> list = customerServiceImpl.getFollowing(email);
+		ObjectMapper mapper = new ObjectMapper();
+		String str = mapper.writeValueAsString(list);
+		return str;
 	}
 }

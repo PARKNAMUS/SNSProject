@@ -13,10 +13,12 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
 #maindiv {
+     position: fixed;
 	width: 1000px;
 	margin-top: 8%;
 	margin-left: 28%;
@@ -79,7 +81,7 @@
 			if(imgIndex == imgList.length){
 				imgIndex = 0;	
 			}
-			$("#phoneimg").css('opacity','0.5').stop().attr("src",imgSrc+imgList[imgIndex]).animate({opacity:1},500);
+			$("#phoneimg").hide().attr("src",imgSrc+imgList[imgIndex]).toggle('slide',{direction:'right'});
 		}, 5000);
 
 	})
@@ -94,7 +96,7 @@
 			 document.getElementById("email").focus();
 			 return false;
 		 }
-		 if(password.length <8 || password.length>16){
+		 if(!passwordRegExp.test(password)){
 			 alert("비밀번호는 영문 대소문자와 숫자로 8~16자리여야 합니다.")
 			 document.getElementById("password").value="";
 			 document.getElementById("password").focus();

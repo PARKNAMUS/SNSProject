@@ -16,6 +16,7 @@
 <!-- Latest compiled JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
@@ -49,10 +50,11 @@
 			<div style="width:40%;float:left;">
 				<form action="postUpload.do" id="postForm" method="post" enctype="multipart/form-data" class="filebox">
 					<label>이미지 업로드</label>
-					<input type="file" multiple="multiple" id="postimg" name="postimg"  class="form-control-file border"><br>
+					<input type="file" multiple="multiple" id="postimg" name="postimg"  class="form-control-file border" accept=".gif, .jpg, .png" ><br>
 					<label>게시글 입력</label>
 					<textarea rows="5" cols="" class="form-control" id="post_content" name="post_content" ></textarea><br>
 					<input type="button" class="btn btn-secondary" onclick="postSubmit()" style="font-size:25px;margin-bottom:10%;" value="공유">
+					<input type="button" class="btn btn-secondary" onclick="history.go(-1)" style="font-size:25px;margin-bottom:10%;" value="취소">
 				</form>
 			</div>
 			<div style="float:left;width:50%;margin-left:5%;">
@@ -69,8 +71,9 @@
 	var index = 0;
 	var images;
 	var reader = new FileReader();
+	var direct;
 	reader.onload = function(e){
-		$("#tempimg").attr("src",e.target.result);
+		$("#tempimg").hide().attr("src",e.target.result).toggle("slide",{direction:direct});
 	}
 	$(function(){
 		$("#postimg").change(function(){
@@ -88,6 +91,7 @@
 		}),
 		$("#tri2").click(function(){
 			index++;
+			direct = 'right'
 			$("#tri1").css("display","initial")
 			reader.readAsDataURL(images[index]);
 			if(index == images.length-1){
@@ -96,6 +100,7 @@
 		}),
 		$("#tri1").click(function(){
 			index--;
+			direct = 'left'
 			$("#tri2").css("display","initial")
 			reader.readAsDataURL(images[index]);
 			if(index == 0){

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
+import park.spring.web.vo.PostLikeVO;
+import park.spring.web.vo.PostSaveVO;
 import park.spring.web.vo.PostVO;
 
 @Repository
@@ -38,6 +40,26 @@ public class IndexDaoImpl implements IndexDao {
 	@Override
 	public List<CommentsVO> getComments(int post_seq) {
 		return sqlSessionTemplate.selectList(mbId+"getComments",post_seq);
+	}
+	@Override
+	public void beLike(PostLikeVO vo) {
+		sqlSessionTemplate.insert(mbId+"belike",vo);
+	}
+	@Override
+	public void unLike(PostLikeVO vo) {
+		sqlSessionTemplate.delete(mbId+"unlike",vo);
+	}
+	@Override
+	public void save(PostSaveVO vo) {
+		sqlSessionTemplate.insert(mbId+"save",vo);
+	}
+	@Override
+	public void unsave(PostSaveVO vo) {
+		sqlSessionTemplate.delete(mbId+"unsave",vo);
+	}
+	@Override
+	public List<CustomerVO> recommend(String email) {
+		return sqlSessionTemplate.selectList(mbId+"recommend",email);
 	}
 	
 

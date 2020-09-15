@@ -6,6 +6,7 @@
 <html>
 <head>
 <script src="${pageContext.request.contextPath}/resources/js/jquery-3.5.1.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1" >
 <style type="text/css">
 #maindiv {
@@ -49,7 +50,7 @@
 
 @media ( max-width : 900px) {
 	#maindiv {
-		width: 650px;
+		width: 100%;
 		margin-left: 0%;
 	}
 }
@@ -66,7 +67,9 @@
 	}
 
 }
-
+.postfirst{
+border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bottom:5%;
+}
 .overlay {
 	position: fixed;
 	top: 0;
@@ -123,7 +126,7 @@
 }
 @media ( max-width : 900px) {
 	.post{
-		width: 650px;
+		width: 90%;
 	}
 }
 .post {
@@ -171,7 +174,7 @@
 }
 @media ( max-width : 900px) {
 	.tri2 {
-			margin-left:630px;
+			margin-left:95%;
 	}
 }
 </style>
@@ -203,8 +206,8 @@
 			<div style="width:60%;float:left;height:700px;">
 				<img alt="" src="" style="width:100%;height:100%;" id="postImg">
 			</div>
-			<div style="width:40%;float:left;height:700px;overflow:scroll;" id="commentdiv">
-				<div style="" >
+			<div style="width:40%;float:left;height:700px;" >
+				<div style="overflow:scroll;height:600px;" id="commentdiv">
 					<div style="padding:20px;">
 						<img id="openProfile" alt="" src="" style="width:50px;height:50px;border-radius: 70%;vertical-align:middle;">&nbsp;&nbsp;<b id="openNick_name" ></b>
 					</div>
@@ -221,14 +224,40 @@
 					<div style="clear:both;"></div>
 					<div id="commentsub"></div>
 				</div>
+				<div style="height:50px;">
+					<img alt="" id="heart" src="${pageContext.request.contextPath}/resources/images/index/heart2.png" style="width:45px;height:45px;" onclick="">&nbsp;&nbsp;
+					<img alt="" src="${pageContext.request.contextPath}/resources/images/dm.png" style="width:45px;height:45px;">&nbsp;&nbsp;
+					<img alt="" id="save" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:45px;height:45px;">
+				</div>
+				<div style="height:50px;">
+				<form action="" id="opencomments_form">
+					<input type="hidden" value="" name="post_seq_str" id="openSeq">
+					<input type="hidden" value="${login_id}" name="comments_email">
+					<input id="openComments" name="comment_content" type="text" style="width:70%;height:100%;border:none;border-right:0px; border-top:0px; boder-left:0px; boder-bottom:0px;font-size:20px;" placeholder="댓글달기..">
+					<input id="openCBtn"type="button" onclick="insertCommnet_open($('#openComments'))" onmouseover="$(this).css('color','skyblue')" onmouseout="$(this).css('color','#00BFFF')" style="border:0;outline:0;background-color:white;color:#00BFFF;font-size:20px;" value="입력">
+				</form>
+				</div>
 			</div>
+
 			<div style="clear: both;"></div>
 		</div>
 	</div>
+	
+	<!-- 오른쪽 div -->
 	<div id="sidediv" style="position:absolute;width:400px;margin-left:75%;margin-top:2%;padding:1%;">
+		<!-- 오른쪽 내정보 -->
 		<div>
 			<div style="float:left;">
-				<img alt="" src="/web/images/${customer.profile_img}" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
+				<c:choose>
+					<c:when test="${customer.profile_img == null || customer.profile_img == '' }">
+						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
+					</c:when>
+					<c:otherwise>
+						<img alt="" src="/web/images/${customer.profile_img}" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
+					</c:otherwise>
+				</c:choose>
+
+				
 			</div>
 			<div style="float:left;margin-left:10px;font-size:20px;">
 				<b>${customer.nick_name }</b><br><br><b style="color:gray;">${customer.name }</b>
@@ -237,25 +266,63 @@
 		
 		<div style="clear:both;"></div>
 		
+		<!--추천 div -->
 		<div style="margin-top:5%;" id="recommenddiv">
 			<b>회원님을 위한 추천</b><a style="margin-left:46%;" href="#">모두보기</a>
 			<br><br>
-			<div>
-				<div style="float:left;">
-					<img alt="" src="${pageContext.request.contextPath}/resources/images/my1.jpg" style="width:50px;height:50px;border-radius: 70%;" >
-				</div>
-				<div style="float:left;margin-left:10px;font-size:16px;">
-					<b>park_ns</b>
-					<br><br><b style="color:gray;">회원님을 팔로우 합니다.</b>		
-				</div>
-				<div style="float:left;margin-left:90px;">
-					<a>팔로우</a>
-				</div>
-			</div>
+			<c:if test="${recommend != null }">
+				<c:choose>
+					<c:when test="${recommend.size() <=5 }">
+						<c:forEach begin="0" end="${recommend.size()-1 }" var="i">
+							<div style="margin-bottom:5%;">
+								<div style="float:left;">
+									<c:choose>
+										<c:when test="${recommend.get(i).profile_img == null }"><img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 70%;" ></c:when>
+										<c:otherwise>
+											<img alt="" src="/web/images/${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
+										</c:otherwise>
+									</c:choose>
+
+								</div>
+								<div style="float:left;margin-left:10px;font-size:16px;">
+									<b onclick="userProfile('${recommend.get(i).email}','my')" onmouseout="$(this).css('opacity',1)" onmouseover="$(this).css('opacity',0.5)">${recommend.get(i).nick_name }</b>
+									<br><br><b style="color:gray;">함께아는 친구</b>		
+								</div>
+								<div style="float:left;margin-left:90px;">
+									<a onclick="follow('${recommend.get(i).email}')" onmouseout="$(this).css('opacity',1)" onmouseover="$(this).css('opacity',0.5)">팔로우</a>
+								</div>
+								<div style="clear:both;"></div>
+							</div>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<c:forEach begin="0" end="4" var="i">
+							<div style="margin-bottom:5%;">
+								<div style="float:left;">
+									<c:choose>
+										<c:when test="${recommend.get(i).profile_img == null }"><img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 70%;" ></c:when>
+										<c:otherwise>
+											<img alt="" src="/web/images/${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
+										</c:otherwise>
+									</c:choose>
+								</div>
+								<div style="float:left;margin-left:10px;font-size:16px;">
+									<b onclick="userProfile('${recommend.get(i).email}','my')" onmouseout="$(this).css('opacity',1)" onmouseover="$(this).css('opacity',0.5)">${recommend.get(i).nick_name }</b>
+									<br><br><b style="color:gray;">함께아는 친구</b>		
+								</div>
+								<div style="float:left;margin-left:90px;" onclick="follow('${recommend.get(i).email}')" onmouseout="$(this).css('opacity',1)" onmouseover="$(this).css('opacity',0.5)">
+									<a>팔로우</a>
+								</div>
+								<div style="clear:both;"></div>
+							</div>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
+			</c:if>
 		</div>
 		
 		<div style="clear:both;"></div>
-		
+		<!-- 오른쪽 약관 -->
 		<div style="margin-top:30px;color:gray;" id="bdiv">
 			<a>소개</a> | <a>도움말</a> | <a>홍보 센터</a> | <a>API</a> | <a>채용</a> | <a>정보</a> | <a>개인정보</a>
 			 | <a>처리방침</a> | <a>약관</a> | <a>위치</a> | <a>인기 계정</a> | 
@@ -264,6 +331,8 @@
 			<b>© 2020 INSTAGRAM FROM FACEBOOK</b>
 		</div>
 	</div>
+	
+	<!-- 중앙 -->
 	<div id="maindiv">
 		<div style="border: 1px solid gray;width:95%;background-color:white;padding:3%;overflow:scroll;" id="storybox">
 			<div style="width:64px;height:64px;overflow:hidden;border-radius: 30px 30px 30px 30px;float:left;margin-right:5%;">
@@ -277,15 +346,25 @@
 			</div>
 		</div>
 		
+		<!-- 게시물 div -->
 		<c:forEach items="${post}" var="post" varStatus="i">
-		<div style="border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bottom:5%;">
+		<div style="" class="postfirst">
 			<div style="width:100%;margin-top:20px;border-bottom:1px solid gray;">
-				&nbsp;&nbsp;&nbsp;&nbsp;<img alt="" src="/web/images/${post.profile_img }" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
-				&nbsp;&nbsp;<b style="font-size:20px;" onclick="userProfile('${post.post_uploader}')" onmouseover="$(this).css('color','gray')" onmouseout="$(this).css('color','black')" >${post.nick_name }</b>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<c:choose>
+					<c:when test="${post.profile_img == null || post.profile_img == '' }">
+						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
+					</c:when>
+					<c:otherwise>
+						<img alt="" src="/web/images/${post.profile_img }" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
+					</c:otherwise>
+				</c:choose>
+				
+				&nbsp;&nbsp;<b style="font-size:20px;" onclick="userProfile('${post.post_uploader}','my')" onmouseover="$(this).css('color','gray')" onmouseout="$(this).css('color','black')" >${post.nick_name }</b>
 				<img alt="" src="${pageContext.request.contextPath}/resources/images/index/dot.png" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)" style="width:50px;height:50px;vertical-align:middle;margin-left:520px;" onclick="openContentPop(${post.post_seq},'${post.post_uploader}','${login_id}')">
 				<br><br>
 			</div>
-			<div style="width:100%;height:600px;">
+			<div style="width:100%;height:600px;" >
 				<input type="hidden" value="0" id="imageIndex${i.index}">
 				<img id="ltri${i.index}" onmouseover="$(this).css('opacity',1)" onmouseout="$(this).css('opacity',0.5)" class="tri1" src="${pageContext.request.contextPath}/resources/images/tri.png" onclick="beforeImage(document.getElementById('imageIndex${i.index}'),${i.index},${post.post_seq })">
 				<c:if test="${ fn:length(post.imageList) > 1 }">
@@ -295,13 +374,29 @@
 			</div>
 			<div style="width:100%;">
 				<br>&nbsp;&nbsp;
-				<img alt="" src="${pageContext.request.contextPath}/resources/images/index/heart2.png" style="width:45px;height:45px;">&nbsp;&nbsp;
+				<c:choose>
+					<c:when test="${post.is_like == 1 }">
+						<img alt="" id="heart${post.post_seq }" src="${pageContext.request.contextPath}/resources/images/index/heart.png" style="width:45px;height:45px;" onclick="unlike('${login_id}',${post.post_seq })">&nbsp;&nbsp;
+					</c:when>
+					<c:otherwise>
+						<img alt="" id="heart${post.post_seq }" src="${pageContext.request.contextPath}/resources/images/index/heart2.png" style="width:45px;height:45px;" onclick="belike('${login_id}',${post.post_seq })">&nbsp;&nbsp;
+					</c:otherwise>
+				</c:choose>
+				<input type="hidden" id="likeStatus${post.post_seq }" value="${post.is_like }">
 				<img alt="" src="${pageContext.request.contextPath}/resources/images/dm.png" style="width:45px;height:45px;">
-				<img alt="" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:45px;height:45px;margin-left:590px;">
+				<c:choose>
+					<c:when test="${post.is_save == 1 }">
+						<img alt="" id="save${post.post_seq }" src="${pageContext.request.contextPath}/resources/images/index/bstar.png" style="width:45px;height:45px;margin-left:590px;" onclick="unsave('${login_id}',${post.post_seq })">
+					</c:when>
+					<c:otherwise>
+						<img alt="" id="save${post.post_seq }" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:45px;height:45px;margin-left:590px;" onclick="save('${login_id}',${post.post_seq })">
+					</c:otherwise>
+				</c:choose>
+				
 			</div>
 			<div style="width: 90%;margin-left:20px;">
 				<br>
-				<p style="font-weight:bold;">좋아요 100개</p>
+				<p style="font-weight:bold;">좋아요 <span style="font-weight:bold;" id="likenum${post.post_seq }">${post.like_num }</span>개</p>
 			</div>
 			<div style="width: 90%;margin-left:20px;">
 				<br>
@@ -365,6 +460,7 @@
 		$(".overlay").css("opacity","0");
 	}
 	var openPost = function(profileImg,nick_name,content,seq,image){
+		
 		$("#postImg").attr("src","/web/images/"+image)
 		$("#openProfile").attr("src","/web/images/"+profileImg)
 		$("#openNick_name").text(nick_name)
@@ -374,6 +470,14 @@
 		$("#popup2").css("visibility","visible");
 		$("#popup2").css("opacity","1");
 		$("#commentsub").empty();
+		$("#openSeq").val(seq)
+		if(Number($("#likeStatus"+seq).val()) == 0){
+			$("#heart").attr("src","${pageContext.request.contextPath}/resources/images/index/heart2.png")
+			$("#heart").attr("onclick","belike('${login_id}',"+seq+")")
+		}else if(Number($("#likeStatus"+seq).val()) == 1){
+			$("#heart").attr("src","${pageContext.request.contextPath}/resources/images/index/heart.png")
+			$("#heart").attr("onclick","unlike('${login_id}',"+seq+")")
+		}
 		$.ajax({
 			type:"POST",
 			url:"getComments.do",
@@ -422,7 +526,9 @@
 			 success:function(data){
 				 images = data.split(',');
 					$("#ltri"+img).css("display","initial")
-					$("#postImg"+img).css('opacity','0.5').stop().attr("src", "/web/images/"+images[inx]).animate({opacity:1},500);
+					.show("slide", { direction: "left" }, 1000)
+					$("#postImg"+img)
+					$("#postImg"+img).hide().attr("src", "/web/images/"+images[inx]).toggle('slide',{direction:'right'});
 					if(images.length-1 == inx){
 						$("#rtri"+img).css("display","none")
 					}
@@ -448,7 +554,7 @@
 			 success:function(data){
 				 images = data.split(',');
 					$("#rtri"+img).css("display","initial")
-					$("#postImg"+img).css('opacity','0.5').stop().attr("src", "/web/images/"+images[inx]).animate({opacity:1},500);
+					$("#postImg"+img).hide().attr("src", "/web/images/"+images[inx]).toggle('slide');
 					if(inx == 0){
 						$("#ltri"+img).css("display","none")
 					}
@@ -501,6 +607,127 @@
 				}
 			})
 		}
+	}
+	var insertCommnet_open =function(target){
+		if(target.val().length<1){
+			alert("내용을 입력하세요")
+		}else{
+			$.ajax({
+				type:"POST",
+				url:"insertComment.do",
+				dataType:"text",
+				data:$("#opencomments_form").serialize(),
+				success:function(data){
+					location.reload(true);
+					alert("댓글이 등록되었습니다.")
+				},
+				error:function(error){
+					alert("error")
+				}
+			})
+		}
+	}
+	var unlike = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"unlike.do",
+			dataType:"text",
+			data:{
+				postlike_post_seq:seq,
+				postlike_email:email
+			},
+			success:function(data){
+				$("#heart"+seq).css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/heart2.png").animate({width:45,height:45},500)
+				$("#heart"+seq).attr("onclick","belike('"+email+"',"+seq+")")
+				$("#heart").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/heart2.png").animate({width:45,height:45},500)
+				$("#heart"+seq).attr("onclick","belike('"+email+"',"+seq+")")
+				var likenum = Number($("#likenum"+seq).html()) - 1;
+				$("#likenum"+seq).html(likenum)
+				$("#likeStatus"+seq).val(0)
+			},
+			error:function(){
+				alert("error")
+			}
+		})
+	}
+	var belike = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"belike.do",
+			dataType:"text",
+			data:{
+				postlike_post_seq:seq,
+				postlike_email:email
+			},
+			success:function(data){
+				$("#heart"+seq).css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/heart.png").animate({width:45,height:45},500)
+				$("#heart"+seq).attr("onclick","unlike('"+email+"',"+seq+")")
+				$("#heart").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/heart.png").animate({width:45,height:45},500)
+				$("#heart").attr("onclick","unlike('"+email+"',"+seq+")")
+				var likenum = Number($("#likenum"+seq).html()) + 1;
+				$("#likenum"+seq).html(likenum)
+				$("#likeStatus"+seq).val(1)
+			},
+			error:function(){
+				alert("error")
+			}
+		})
+	}
+	var unsave = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"unsave.do",
+			dataType:"text",
+			data:{
+				postsave_post_seq:seq,
+				postsave_email:email
+			},
+			success:function(data){
+				$("#save"+seq).css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/star.png").animate({width:45,height:45},500)
+				$("#save"+seq).attr("onclick","save('"+email+"',"+seq+")")
+				$("#save").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/star.png").animate({width:45,height:45},500)
+				$("#save").attr("onclick","save('"+email+"',"+seq+")")
+			},
+			error:function(){
+				alert("error")
+			}
+		})
+	}
+	var save = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"save.do",
+			dataType:"text",
+			data:{
+				postsave_post_seq:seq,
+				postsave_email:email
+			},
+			success:function(data){
+				$("#save"+seq).css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/bstar.png").animate({width:45,height:45},500)
+				$("#save"+seq).attr("onclick","unsave('"+email+"',"+seq+")")
+				$("#save").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/bstar.png").animate({width:45,height:45},500)
+				$("#save").attr("onclick","unsave('"+email+"',"+seq+")")
+			},
+			error:function(){
+				alert("error")
+			}
+		})
+	}
+	var follow = function(email){
+		$.ajax({
+			 type:"POST",
+			 url:"follow.do",
+			 dataType:"text",
+			 data:{
+				 following:email
+			 },
+			 success:function(data){
+				 location.reload(true);
+			 },
+			 error:function(error){
+				 
+			 }
+		})
 	}
 </script>
 </html>
