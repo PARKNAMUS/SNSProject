@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -81,5 +82,12 @@ public class IndexController {
 	public String unsaveController(PostSaveVO vo) {
 		indexServiceImpl.unsave(vo);
 		return "";
+	}
+	@RequestMapping("specpost.do")
+	public ModelAndView specpostController(@RequestParam("post_seq") String post_seq ,ModelAndView mav) {
+		mav.addObject("post",indexServiceImpl.getSpecPost(Integer.parseInt(post_seq)));
+		mav.addObject("comments",indexServiceImpl.getComments(Integer.parseInt(post_seq)));
+		mav.setViewName("postpage");
+		return mav;
 	}
 }	

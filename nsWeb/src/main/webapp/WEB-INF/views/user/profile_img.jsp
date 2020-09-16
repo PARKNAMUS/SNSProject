@@ -44,7 +44,7 @@
 				 success:function(data){
 					 fileName = data;
 					 alert(fileName);
-					 $("#myimg").attr("src","http://localhost:8080/web/images/"+fileName);
+					 $("#myimg").attr("src","getimg.do?img="+fileName);
 				 },
 				 error: function(){
 					 alert("error");

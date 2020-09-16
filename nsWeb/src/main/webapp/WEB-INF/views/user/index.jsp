@@ -195,7 +195,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 				팔로우 취소
 			</div>
 			<hr>
-			<div class="content" onclick="">
+			<div class="content" id="openContent">
 				게시물로 이동<input type="hidden" value="" id="contentSeq">
 			</div>
 		</div>
@@ -253,7 +253,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
 					</c:when>
 					<c:otherwise>
-						<img alt="" src="/web/images/${customer.profile_img}" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
+						<img alt="" src="getimg.do?img=${customer.profile_img}" style="width:64px;height:64px;border-radius: 30px 30px 30px 30px;" >
 					</c:otherwise>
 				</c:choose>
 
@@ -279,7 +279,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 									<c:choose>
 										<c:when test="${recommend.get(i).profile_img == null }"><img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 70%;" ></c:when>
 										<c:otherwise>
-											<img alt="" src="/web/images/${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
+											<img alt="" src="getimg.do?img=${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
 										</c:otherwise>
 									</c:choose>
 
@@ -302,7 +302,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 									<c:choose>
 										<c:when test="${recommend.get(i).profile_img == null }"><img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 70%;" ></c:when>
 										<c:otherwise>
-											<img alt="" src="/web/images/${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
+											<img alt="" src="getimg.do?img=${recommend.get(i).profile_img }" style="width:50px;height:50px;border-radius: 70%;" >
 										</c:otherwise>
 									</c:choose>
 								</div>
@@ -356,7 +356,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
 					</c:when>
 					<c:otherwise>
-						<img alt="" src="/web/images/${post.profile_img }" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
+						<img alt="" src="getimg.do?img=${post.profile_img }" style="width:50px;height:50px;border-radius: 30px 30px 30px 30px;vertical-align:middle;" >
 					</c:otherwise>
 				</c:choose>
 				
@@ -370,7 +370,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 				<c:if test="${ fn:length(post.imageList) > 1 }">
 					<img id="rtri${i.index}" onmouseover="$(this).css('opacity',1)" onmouseout="$(this).css('opacity',0.5)" class="tri2"  src="${pageContext.request.contextPath}/resources/images/tri2.png"  onclick="changeImage(document.getElementById('imageIndex${i.index}'),${i.index},${post.post_seq })">
 				</c:if>
-				<img alt="" src="/web/images/${post.imageList[0]}" style="width:100%;height:100%;" id="postImg${i.index}">
+				<img alt="" src="getimg.do?img=${post.imageList[0]}" style="width:100%;height:100%;" id="postImg${i.index}">
 			</div>
 			<div style="width:100%;">
 				<br>&nbsp;&nbsp;
@@ -428,13 +428,31 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 		document.getElementById("contentSeq").value = seq
 		$(".overlay").css("visibility","visible");
 		$(".overlay").css("opacity","1");
+		$("#openContent").attr("onclick","openSpecPost("+seq+")")
 		if(myid == email){
 			$("#unfw").html("게시물 삭제")
-			$("#unfw").attr("onclick","deletePost("+seq+")")
+			$("#unfw").attr("onclick","deletePost('"+seq+"')")
 		}else{
 			$("#unfw").html("팔로우 취소")
 			$("#unfw").attr("onclick",'unfollow("'+email+'","'+myid+'")')
 		}
+	}
+	var openSpecPost = function(seq){
+		var form = document.createElement("form");
+		var input = new Array()
+		var names = ["post_seq"]
+		var values = [seq]
+        form.action = "specpost.do";
+        form.method = "post";   
+        for (var i = 0; i < 1; i++) {            
+        	input[i] = document.createElement("input");
+            input[i].setAttribute("type", "hidden");
+            input[i].setAttribute('name', names[i]);
+            input[i].setAttribute("value", values[i]);
+            form.appendChild(input[i]);
+        }
+        document.body.appendChild(form);
+		form.submit();
 	}
 	var deletePost = function(target){
 		var result = confirm("정말로 삭제하시겠습니까?")
@@ -461,10 +479,10 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 	}
 	var openPost = function(profileImg,nick_name,content,seq,image){
 		
-		$("#postImg").attr("src","/web/images/"+image)
-		$("#openProfile").attr("src","/web/images/"+profileImg)
+		$("#postImg").attr("src","getimg.do?img="+image)
+		$("#openProfile").attr("src","getimg.do?img="+profileImg)
 		$("#openNick_name").text(nick_name)
-		$("#openProfile2").attr("src","/web/images/"+profileImg)
+		$("#openProfile2").attr("src","getimg.do?img="+profileImg)
 		$("#openNick_name2").text(nick_name)
 		$("#openContent").text(content)
 		$("#popup2").css("visibility","visible");
@@ -492,7 +510,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 						for(var i=0;i<getData.length;i++){
 							var html = "<div style='padding:2%;'>"
 							+"<div style='float:left;width:40%;margin-bottom:5%;'>"
-							+"<img src='/web/images/" +getData[i].comments_profile+ "' style='width:50px;height:50px;border-radius:70%;vertical-align:middle;margin-right:20px;' >"
+							+"<img src='getimg.do?img=" +getData[i].comments_profile+ "' style='width:50px;height:50px;border-radius:70%;vertical-align:middle;margin-right:20px;' >"
 							+"<b>"+getData[i].comments_nick_name+"</b></div><br>"
 							+"<div style='float:left;width:50%;word-break:break-all;'><b>"+getData[i].comment_content+"</b><br><br>"
 							+"<a style='color:gray;margin-right:20px;' onclick=''>신고</a><a style='color:gray;' onclick=''>답글달기</a></div>"
@@ -528,7 +546,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 					$("#ltri"+img).css("display","initial")
 					.show("slide", { direction: "left" }, 1000)
 					$("#postImg"+img)
-					$("#postImg"+img).hide().attr("src", "/web/images/"+images[inx]).toggle('slide',{direction:'right'});
+					$("#postImg"+img).hide().attr("src", "getimg.do?img="+images[inx]).toggle('slide',{direction:'right'});
 					if(images.length-1 == inx){
 						$("#rtri"+img).css("display","none")
 					}
@@ -554,7 +572,7 @@ border: 1px solid gray;width:100%;background-color:white;margin-top:5%;margin-bo
 			 success:function(data){
 				 images = data.split(',');
 					$("#rtri"+img).css("display","initial")
-					$("#postImg"+img).hide().attr("src", "/web/images/"+images[inx]).toggle('slide');
+					$("#postImg"+img).hide().attr("src", "getimg.do?img="+images[inx]).toggle('slide');
 					if(inx == 0){
 						$("#ltri"+img).css("display","none")
 					}

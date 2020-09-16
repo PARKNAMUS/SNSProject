@@ -138,7 +138,7 @@
 						<img id="profileimg"  alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png">
 					</c:when>
 					<c:otherwise>
-						<img id="profileimg" alt="" src="/web/images/${customer.profile_img}">
+						<img id="profileimg" alt="" src="getimg.do?img=${customer.profile_img}">
 					</c:otherwise>
 				</c:choose>
 				
@@ -206,8 +206,8 @@
 					</div>
 					<div style="height:50px;">
 						<img alt="" id="heart" src="${pageContext.request.contextPath}/resources/images/index/heart2.png" style="width:45px;height:45px;" onclick="">&nbsp;&nbsp;
-						<img alt="" src="${pageContext.request.contextPath}/resources/images/dm.png" style="width:45px;height:45px;">&nbsp;&nbsp;
-						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:45px;height:45px;">
+						<img alt="" id="" src="${pageContext.request.contextPath}/resources/images/dm.png" style="width:45px;height:45px;">&nbsp;&nbsp;
+						<img alt="" id="star" src="${pageContext.request.contextPath}/resources/images/index/star.png" style="width:45px;height:45px;">
 					</div>
 					<div style="height:50px;">
 					<form action="" id="opencomments_form">
@@ -272,8 +272,9 @@
 			<c:forEach items="${post }" var="post">
 				<div style="width:32%;height:280px;float:left;margin-right:1%;margin-bottom:1%;" onmouseover="$(this).children().first().css('display','initial')" onmouseout="$(this).children().first().css('display','none')">
 					<img src="${pageContext.request.contextPath}/resources/images/index/dot.png" style="width:32px;height:32px;position:absolute;z-index:2;margin-left:1%;display:none;margin-bottom:1%;" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)" onclick="openContentPop(${post.post_seq},'${post.post_uploader }','${login_id }')">
-					<img src="/web/images/${post.imageList[0] }" style="width:100%;height:100%" onclick="openPost('${post.imageList[0]}','${customer.profile_img}','${customer.nick_name}','${post.post_content }','${post.post_uploader}',${post.post_seq})" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
-					<input type="hidden" id="likeStatus${post.post_seq }" value="${post.is_like }">			
+					<img src="getimg.do?img=${post.imageList[0] }" style="width:100%;height:100%" onclick="openPost('${post.imageList[0]}','${customer.profile_img}','${customer.nick_name}','${post.post_content }','${post.post_uploader}',${post.post_seq})" onmouseover="$(this).css('opacity',0.5)" onmouseout="$(this).css('opacity',1)">
+					<input type="hidden" id="likeStatus${post.post_seq }" value="${post.is_like }">
+					<input type="hidden" id="saveStatus${post.post_seq }" value="${post.is_save }">			
 				</div>
 			</c:forEach>
 		</div>
@@ -331,11 +332,11 @@
 		})
 	}
 	var openPost = function(image,profile,nick_name,content,uploader,seq){
-		$("#postImg").attr("src","/web/images/"+image)
+		$("#postImg").attr("src","getimg.do?img="+image)
 		$("#openNick_name").html(nick_name)
-		$("#openProfile").attr("src","/web/images/"+profile)
+		$("#openProfile").attr("src","getimg.do?img="+profile)
 		$("#openNick_name2").html(nick_name)
-		$("#openProfile2").attr("src","/web/images/"+profile)
+		$("#openProfile2").attr("src","getimg.do?img="+profile)
 		$("#openContent").html(content)
 		$("#popup2").css("visibility","visible");
 		$("#popup2").css("opacity","1");
@@ -348,6 +349,13 @@
 		}else if(Number($("#likeStatus"+seq).val()) == 1){
 			$("#heart").attr("src","${pageContext.request.contextPath}/resources/images/index/heart.png")
 			$("#heart").attr("onclick","unlike('${login_id}',"+seq+")")
+		}
+		if(Number($("#saveStatus"+seq).val()) == 0){
+			$("#star").attr("src","${pageContext.request.contextPath}/resources/images/index/star.png")
+			$("#star").attr("onclick","save('${login_id}',"+seq+")")
+		}else if(Number($("#saveStatus"+seq).val()) == 1){
+			$("#star").attr("src","${pageContext.request.contextPath}/resources/images/index/bstar.png")
+			$("#star").attr("onclick","unsave('${login_id}',"+seq+")")
 		}
 	}
 	var closePost = function(){
@@ -384,6 +392,42 @@
 	}
 	var blamePost = function(email,myid,seq){
 		
+	}
+	var unsave = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"unsave.do",
+			dataType:"text",
+			data:{
+				postsave_post_seq:seq,
+				postsave_email:email
+			},
+			success:function(data){
+				$("#star").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/star.png").animate({width:45,height:45},500)
+				$("#star").attr("onclick","save('"+email+"',"+seq+")")
+			},
+			error:function(){
+				alert("error")
+			}
+		})
+	}
+	var save = function(email,seq){
+		$.ajax({
+			type:"POST",
+			url:"save.do",
+			dataType:"text",
+			data:{
+				postsave_post_seq:seq,
+				postsave_email:email
+			},
+			success:function(data){
+				$("#star").css('width',50).css('height',50).attr("src","${pageContext.request.contextPath}/resources/images/index/bstar.png").animate({width:45,height:45},500)
+				$("#star").attr("onclick","unsave('"+email+"',"+seq+")")
+			},
+			error:function(){
+				alert("error")
+			}
+		})
 	}
 	var unlike = function(email,seq){
 		$.ajax({
@@ -492,7 +536,7 @@
 				var type = 'my';
 				for(var i=0;i<getData.length;i++){
 					$("#followdiv").append("<div style='padding:5%;' onclick='userProfile("+'"'+getData[i].email+'"'+","+'"'+type+'"'+")' onmouseover='$(this).css("+'"'+"opacity"+'"'+",0.5)' onmouseout='$(this).css("+'"'+"opacity"+'"'+",1)'>"
-					+"<div style='float:left'><img src='/web/images/"+getData[i].profile_img+"' style='width:64px;height:64px;border-radius:70%;'></div>"
+					+"<div style='float:left'><img src='getimg.do?img="+getData[i].profile_img+"' style='width:64px;height:64px;border-radius:70%;'></div>"
 					+"<div style='float:left;margin-left:5%;'><p>"+getData[i].name+"</p><br><p style='color:gray;'>"+getData[i].nick_name+"</p></div>"
 					+"<div style='clear:both;'></div>"
 					+"</div>"
@@ -519,7 +563,7 @@
 				var type = 'my';
 				for(var i=0;i<getData.length;i++){
 					$("#followdiv").append("<div style='padding:5%;' onclick='userProfile("+'"'+getData[i].email+'"'+","+'"'+type+'"'+")' onmouseover='$(this).css("+'"'+"opacity"+'"'+",0.5)' onmouseout='$(this).css("+'"'+"opacity"+'"'+",1)'>"
-					+"<div style='float:left'><img src='/web/images/"+getData[i].profile_img+"' style='width:64px;height:64px;border-radius:70%;'></div>"
+					+"<div style='float:left'><img src='getimg.do?img="+getData[i].profile_img+"' style='width:64px;height:64px;border-radius:70%;'></div>"
 					+"<div style='float:left;margin-left:5%;'><p>"+getData[i].name+"</p><br><p style='color:gray;'>"+getData[i].nick_name+"</p></div>"
 					+"<div style='clear:both;'></div>"
 					+"</div>"

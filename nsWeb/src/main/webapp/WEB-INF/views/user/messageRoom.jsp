@@ -60,7 +60,7 @@
 					<img src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:90px;height:90px;border-radius:70%;margin-right:5%;vertical-align:middle;">
 				</c:when>
 				<c:otherwise>
-					<img src="/web/images/${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%;vertical-align:middle;">
+					<img src="getimg.do?img=${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%;vertical-align:middle;">
 				</c:otherwise>
 			</c:choose>
 			<b style="font-size:30px;">${user.nick_name}</b>
@@ -82,7 +82,7 @@
 					<c:if test="${message.get(i).senduser != login_id }">
 						<div style="width:100%;margin-top:5%;" id="messag${i}">
 							<div style="float:left;margin-left:5%;">
-							<img src="/web/images/${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%">
+							<img src="getimg.do?img=${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%">
 							</div>
 							<div style="word-break:break-all;margin-left:5%;font-size:20px;border-radius:10%;box-shadow: 2px 2px 2px 2px gray;padding:2%;display:inline-block;max-width:40%;float:left;margin-top:5%;">
 								<b>${message.get(i).message_content}</b>
@@ -107,7 +107,7 @@
 						<c:otherwise>
 							<div style="width:width:100%;margin-top:5%;" id="messag${i}" >
 								<div style="float:left;margin-left:5%;">
-								<img src="/web/images/${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%">
+								<img src="getimg.do?img=${user.profile_img }" style="width:90px;height:90px;border-radius:70%;margin-right:5%">
 								</div>
 								<div style="word-break:break-all;margin-left:5%;font-size:20px;border-radius:10%;box-shadow: 2px 2px 2px 2px gray;padding:2%;display:inline-block;max-width:40%;float:left;margin-top:5%;">
 									<b>${message.get(i).message_content}</b>
@@ -171,7 +171,7 @@
 			if("${user.profile_img }" == null ||"${user.profile_img }" == ""){
 				img = "${pageContext.request.contextPath}/resources/images/index/human.png";
 			}else{
-				img = "/web/images/${user.profile_img}"
+				img = "getimg.do?img=${user.profile_img}"
 			}
 			$("#messagediv").append('<div id="'+(e.data+code)+'" style="margin-top:5%;width:width:100%;">'
 			+'<div style="float:left;margin-left:5%;"><img src="'+img+'" style="width:90px;height:90px;border-radius:70%;margin-right:5%"></div>'

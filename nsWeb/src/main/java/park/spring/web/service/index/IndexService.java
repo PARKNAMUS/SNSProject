@@ -2,6 +2,7 @@ package park.spring.web.service.index;
 
 import java.util.List;
 
+import oracle.jdbc.proxy.annotation.Post;
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.PostLikeVO;
@@ -20,4 +21,5 @@ public interface IndexService {
 	public void save(PostSaveVO vo);
 	public void unsave(PostSaveVO vo);
 	public List<CustomerVO> recommend(String email);
+	public PostVO getSpecPost(int post_seq);
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BlameVO">
+	<insert id="insertblame_post" parameterType="park.spring.web.vo.BlameVO">
+		<selectKey keyProperty="blame_post_seq" resultType="int" order="BEFORE">
+			SELECT blame_post_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO blame_post(blame_seq,blame_email,blame_content_seq,blame_description)
+		VALUES(#{blame_post_seq},#{blame_email},#{blame_content_seq},#{blame_description})
+	</insert>
+	<insert id="insertblame_comments" parameterType="park.spring.web.vo.BlameVO">
+		<selectKey keyProperty="blame_comments_seq" resultType="int" order="BEFORE">
+			SELECT blame_comments_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO blame_comments(blame_seq,blame_email,blame_content_seq,blame_description)
+		VALUES(#{blame_comments_seq},#{blame_email},#{blame_content_seq},#{blame_description})
+	</insert>
+	<insert id="insertblame_message" parameterType="park.spring.web.vo.BlameVO">
+		<selectKey keyProperty="blame_message_seq" resultType="int" order="BEFORE">
+			SELECT blame_message_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO blame_message(blame_seq,blame_email,blame_content_seq,blame_description)
+		VALUES(#{blame_message_seq},#{blame_email},#{blame_content_seq},#{blame_description})
+	</insert>
+	<insert id="insertblame_customer" parameterType="park.spring.web.vo.BlameVO">
+		<selectKey keyProperty="blame_customer_seq" resultType="int" order="BEFORE">
+			SELECT blame_customer_seq.nextval From DUAL
+		</selectKey>
+		INSERT INTO blame_message(blame_seq,blame_email,blame_target_email,blame_description)
+		VALUES(#{blame_customer_seq},#{blame_email},#{blame_target_email},#{blame_description})
+	</insert>
+	
+</mapper>

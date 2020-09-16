@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import oracle.jdbc.proxy.annotation.Post;
 import park.spring.web.dao.index.IndexDaoImpl;
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
@@ -65,6 +66,12 @@ public class IndexServiceImpl implements IndexService {
 	@Override
 	public List<CustomerVO> recommend(String email) {
 		return indexDaoImpl.recommend(email);
+	}
+	@Override
+	public PostVO getSpecPost(int post_seq) {
+		PostVO vo = indexDaoImpl.getSpecPost(post_seq);
+		vo.setImageList(vo.getPost_image().split(","));
+		return vo;
 	}
 
 }

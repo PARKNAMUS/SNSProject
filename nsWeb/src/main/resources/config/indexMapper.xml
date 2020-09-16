@@ -16,6 +16,13 @@
 		from post p join customer c on p.post_uploader = c.email
 		where p.post_uploader = #{value} or p.post_uploader in (select following from follow where follower = #{value}) order by post_regdate desc]]>
 	</select>
+	<select id="getSpecPost" parameterType="int" resultType="park.spring.web.vo.PostVO">
+		<![CDATA[select p.post_seq,p.post_content,p.post_image,p.post_uploader,to_char(p.post_regdate,'yyyy/MM/dd') as post_regdate,c.profile_img,c.nick_name,
+		(SELECT COUNT(*) FROM comments WHERE comments_post_seq = #{post_seq}) as comments_num, 
+		(SELECT COUNT(*) FROM postlike WHERE postlike_post_seq = #{post_seq}) as like_num
+		from post p join customer c on p.post_uploader = c.email
+		where p.post_seq = #{post_seq} order by post_regdate desc]]>
+	</select>
 	<select id="getImage" parameterType="int" resultType="String">
 		SELECT post_image FROM post WHERE post_seq = #{post_seq}
 	</select>

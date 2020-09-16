@@ -71,7 +71,7 @@
 						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:90px;height:90px;border-radius:70%;vertical-align:middle;">
 					</c:when>
 					<c:otherwise>
-						<img alt="" src="/web/images/${room.user_img }" style="width:90px;height:90px;border-radius:70%;vertical-align:middle;">
+						<img alt="" src="getimg.do?img=${room.user_img }" style="width:90px;height:90px;border-radius:70%;vertical-align:middle;">
 					</c:otherwise>
 				</c:choose>
 				

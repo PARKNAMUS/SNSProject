@@ -111,7 +111,7 @@
 						<img alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:100%;height:100%;">
 					</c:when>
 					<c:otherwise>
-						<img alt="" src="/web/images/${myimg}" style="width:100%;height:100%;">
+						<img alt="" src="getimg.do?img=${myimg}" style="width:100%;height:100%;">
 					</c:otherwise>
 				</c:choose>
 				

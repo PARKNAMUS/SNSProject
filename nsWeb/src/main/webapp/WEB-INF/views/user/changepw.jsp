@@ -42,7 +42,7 @@
 						<div><img id="profileimg" alt="" src="${pageContext.request.contextPath}/resources/images/index/human.png" style="width:64px;height:64px;border-radius:70%;"></div>
 					</c:when>
 					<c:otherwise>
-						<div><img id="profileimg" alt="" src="/web/images/${customer.profile_img }" style="width:64px;height:64px;border-radius:70%;"></div>				
+						<div><img id="profileimg" alt="" src="getimg.do?img=${customer.profile_img }" style="width:64px;height:64px;border-radius:70%;"></div>				
 					</c:otherwise>
 				</c:choose>
 				<br><br>

@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import oracle.jdbc.proxy.annotation.Post;
 import park.spring.web.vo.CommentsVO;
 import park.spring.web.vo.CustomerVO;
 import park.spring.web.vo.PostLikeVO;
@@ -60,6 +61,10 @@ public class IndexDaoImpl implements IndexDao {
 	@Override
 	public List<CustomerVO> recommend(String email) {
 		return sqlSessionTemplate.selectList(mbId+"recommend",email);
+	}
+	@Override
+	public PostVO getSpecPost(int post_seq) {
+		return sqlSessionTemplate.selectOne(mbId+"getSpecPost",post_seq);
 	}
 	
 
